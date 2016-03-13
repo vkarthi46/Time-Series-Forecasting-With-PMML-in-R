@@ -1,0 +1,35 @@
+# Working Directory
+setwd("C:\\Users\\vkarth2\\Desktop\\POC-New\\Be-Be\\Mar'16")
+# Required Packages
+if(!require(pacman)){install.packages("pacman");require(pacman);}
+# install.packages("pacman")
+pacman::p_load(astsa,forecast,zoo,caTools,rpart,arm,RCurl,pmmlTransformations,pmml,XML) 
+data=read.csv("C:\\Users\\vkarth2\\Desktop\\POC-New\\Be-Be\\Mar'16\\till Feb'16-1.csv")
+data$Day=as.factor(data$Day)
+ts_data=ts(data[,7],frequency=7)
+trend_1=1:length(ts_data)
+trend_2=1:length(xnew)
+
+regmodel=lm(ts_data~trend+data$Day)
+residuals (model)
+
+ar1res = arima (residuals (regmodel), order = c(1,0,0), include.mean = FALSE) #AR(1) Step 3
+sarima (residuals (regmodel), 1,0,0, no.constant = T)
+
+
+xl = ts.intersect(ts_data, lag(ts_data,-1)) # Step 4 Create matrix with x and lag 1 x as elements
+xnew=xl[,1] - 0.6326*xl[,2] # Step 4 Create x variable for adjustment regression
+
+adjustreg = lm(xnew~trend_2+data$Day[-1]) # Step 5 Adjustment regression
+summary(regmodel)
+summary(adjustreg)
+acf2(residuals(adjustreg))
+pmml(adjustreg)
+
+pmml.lm
+
+install.packages("orcutt")
+library(orcutt)
+cochrane.orcutt(regmodel)
+
+	
